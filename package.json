@@ -1,0 +1,15 @@
+{
+  "name": "websnapper",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "yarn run coffee server.coffee",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "phil294 <philip@waritschlager.de>",
+  "license": "MIT",
+  "dependencies": {
+    "coffeescript": "^2.4.1",
+    "puppeteer": "^2.0.0"
+  }
+}
