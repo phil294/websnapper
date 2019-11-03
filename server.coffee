@@ -6,7 +6,7 @@ fs = require('fs')
 viewport =
 	width: 800
 	height: 600
-scroll_top = 150
+scroll_top = 600
 anchor_links = true
 ################################################################################
 
@@ -22,10 +22,10 @@ dewwit = =>
 	await page.goto url,
 		timeout: 15000
 	
-	#if scroll_top
-	#	await page.evaluate (scroll_top) =>
-	#		window.scrollBy 0, scroll_top
-	#	, scroll_top
+	if scroll_top
+		await page.evaluate (scroll_top) =>
+			window.scrollBy 0, scroll_top
+		, scroll_top
 
 	#await page.screenshot({path: 'blub.png'});
 	
@@ -33,7 +33,7 @@ dewwit = =>
 		escapeHtml = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;")
 		els = []
 		in_viewport = (rect) =>
-			rect.top >= 0 and rect.left >= 0 and rect.top < window.innerHeight and rect.left < window.innerWidth
+			rect.top < window.innerHeight and rect.bottom >= 0
 		occupied_rects = []
 		get_style = (rect) =>
 			top = Math.round rect.top
@@ -125,9 +125,6 @@ dewwit = =>
 		<style>
 			main{
 				background:#f6f6f6;
-				width:#{viewport.width}px;
-				height:#{viewport.height}px;
-				position:relative;
 			}
 			main *{
 				font:x-small sans;
