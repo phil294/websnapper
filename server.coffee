@@ -2,11 +2,11 @@ puppeteer = require('puppeteer')
 fs = require('fs')
 
 ################################################################################
-#url = 'https://youtube.com'
+url = 'https://reddit.com'
 viewport =
 	width: 800
 	height: 600
-scroll_top = 600
+scroll_top = 0
 anchor_links = true
 ################################################################################
 
@@ -14,6 +14,7 @@ dewwit = =>
 	browser = await puppeteer.launch()
 	page = await browser.newPage()
 	page.setViewport viewport
+	page.setJavaScriptEnabled false
 	page.setRequestInterception true
 	page.on 'request', (req) =>
 		if ['image', 'media', 'font'].includes req.resourceType()
@@ -27,7 +28,16 @@ dewwit = =>
 			window.scrollBy 0, scroll_top
 		, scroll_top
 
-	#await page.screenshot({path: 'blub.png'});
+	await page.screenshot({path: 'blub.png'});
+
+	# is necessary (bug?) because
+	# the below node filtering cannot be run with javascript enabled, failing with
+	# Error: Evaluation failed: Error:
+	# 	Failed to execute 'acceptNode' on 'NodeFilter':
+	# 	The provided callback is no longer runnable.
+	page.setJavaScriptEnabled true
+	# so JS will still not be executed
+	await page.evaluate => debugger
 	
 	absolute_els = await page.evaluate (anchor_links) =>
 		escapeHtml = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;")
@@ -117,31 +127,27 @@ dewwit = =>
 
 	html = """
 		<style>
-		main *{
-			position:absolute;
-		}
-		</style>
-
-		<style>
 			main{
 				background:#f6f6f6;
+				width:#{viewport.width}px;
+				height:#{viewport.height}px;
 			}
 			main *{
+				position:absolute;
 				font:x-small sans;
 			}
 			.img{
 				display:flex;
 				justify-content:center;
 				align-items:center;
-			}
-			a:hover{
-				outline:1px dotted gray;
+				border:1px dotted gray;
 			}
 		</style>
-		<main>
-		#{absolute_els.join("\n")}
-		</main>
-	""".replace(/\n*/,'') # < doesnt work
+	""".replace(/[\n\t]/g,'') + """
+	\n<p>compression rate, homepage, options
+	<main>#{absolute_els.join("")}</main>
+	"""
+	
 	fs.writeFileSync '/b/testi.html', html
 
 	await browser.close()
