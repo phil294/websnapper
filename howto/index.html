@@ -29,12 +29,18 @@
             word-break: break-word;
         }
         </style>
+        <script>
+            function detect_dimensions() {
+                document.getElementById('width').value = window.innerWidth;
+                document.getElementById('height').value = window.innerHeight;
+            }
+        </script>
     </head>
     <body>
         <main>
             <h1>websnapper</h1>
             <h2>Try it out</h2>
-            <form method="GET" action="http://localhost:8080">
+            <form method="GET" action="http://websnapper.waritschlager.de">
                 <fieldset>
                     <legend>
                         Visit any URL you like
@@ -64,24 +70,25 @@
                 </fieldset>
             </form>
             <h2>About</h2>
-            <p>This is a simple tool to dramatically save internet when browsing the web.
+            <p>This is a simple tool to dramatically save internet bandwidth when browsing the web.
             <p>You will <em>not</em> see images, videos, colors or input fields, only text and (optionally) links.
-            <p>You will only see a section of the site, with buttons to scroll up and down in the far right corners. This can reduce the download size even more. For example, the snapped heading <a href="TODO snap link">800x600 view of zeit.de</a> is 2.1 KB in size (gzipped), whereas the original <a href="https://www.zeit.de"></a> is about 130 KB (not counting images, scripts, styles etc.). This means more than 98% network savings for initial page load.
+            <p>You will only see a section of the site, with buttons to scroll up and down in the far right corners. This can reduce the download size even more. For example, the snapped heading <a href="http://websnapper.waritschlager.de/?url=http%3A%2F%2Fzeit.de&width=800&height=600&scroll_top=500&links=false
+                ">800x600 view of zeit.de</a> is 1.4 KB in size (gzipped), whereas the original <a href="https://www.zeit.de"></a> is about 130 KB (not counting images, scripts, styles etc.). This means more than 98% network savings for initial page load.
             <p><strong>Javascript is disabled while browsing!</strong> Some sites may not function properly. <small>Reason: To prevent misusage. Enabling it is easy, but I do not want to <a href="https://medium.com/@timotheejeannin/i-built-a-screenshot-api-and-some-guy-was-mining-cryptocurrencies-with-it-cd188dfae773">end up mining bitcoins for some buffoon.</a></small> Might change this some day.
             <p>If you need Javascript or images, please use the more powerful <a href="https://www.brow.sh">brow.sh</a> instead. websnapper is mostly inferior to it, except it allows to browse links without displaying images and only shows a selected viewport. Brow.sh text mode instead always downloads the entire website. Also, as this one does not support JS, the server is more likely to be available, also due to caching:
             <p>The shown website snapshots may be up to 30 minutes old! URL-width-height-link-combinations are being cached for 30 minutes each.
             <h3>Bugs</h3>
-            <p>If you experience bugs or have feedback, I would love to hear from you. Please <a href="TODO">open up an issue</a> or contact me (see end of page).
+            <p>If you experience bugs or have feedback, I would love to hear from you. Please <a href="https://github.com/phil294/websnapper/issues">open up an issue</a> or contact me (see end of page).
             <h2>How it works</h2>
             <h3>Server</h3>
-            <p>A server in the background emulates a headless Chromium browser using <a href="https://github.com/GoogleChrome/puppeteer">Puppeteer</a>, extracts all text, image and anchor elements, gets their coordinates and creates a stripped down website out of it. <a href="TODO">Here is the source code.</a> This has been a mere two-day project for me to learn about headless browsers, but if you want to contribute, you are very welcome to join in. Please consider working on brow.sh instead, however.
+            <p>A server in the background emulates a headless Chromium browser using <a href="https://github.com/GoogleChrome/puppeteer">Puppeteer</a>, extracts all text, image and anchor elements, gets their coordinates and creates a stripped down website out of it. <a href="https://github.com/phil294/websnapper">Here is the source code.</a> This has been a mere two-day project for me to learn about headless browsers, but if you want to contribute, you are very welcome to join in. Please consider working on brow.sh instead, however.
             <p>The server, located in Germany, runs on very little hardware capacity. At some point, when there are too many people using it simultaneously, you might see failure and timeouts. If you would like to provide for better hardware or support me in what I am doing here, you can best contact me directly (mail below).
             <p>You can also run your own server, if you like. See the GitHub link above.
             <h4>No SSL</h4>
-            <p>This whole domain does intentionally *not* use SSL encryption (https), as it can be a hinderance in remote places as described e.g. <a href="https://meyerweb.com/eric/thoughts/2018/08/07/securing-sites-made-them-less-accessible/">here</a> for rural Uganda. This is fine because usually, no sensitive information can be entered with this software: There are no input fields. It would be better to optionally offer SSL with service worker caching though, this is yet tbd.
+            <p>This whole domain does intentionally *not* enforce SSL encryption (https), as it can be a hinderance in remote places as described e.g. <a href="https://meyerweb.com/eric/thoughts/2018/08/07/securing-sites-made-them-less-accessible/">here</a> for rural Uganda. This is fine because usually, no sensitive information can be entered with this software: There are no input fields. You can however access this website with https://, too. Service worker caching is yet tbd.
             <h4>Size</h4>
             <p>The website browser is minimal in size and comes with only very little styling. You can inspect the network usage using the developer tools of your desktop browser.
-            <p>Note that this very howto page is - while still small - not optimized for speed. When your network is very slow and you do not want to open up this introduction every time you want to switch the website, you can also modify the URL query params directly. They look something like this <code>url=google.com&width=800&height=600&links=on</code> and change the same configuration that is shown on this page.
+            <p>Note that *this* very howto page is - while still small - not optimized for speed. When your network is very slow and you do not want to open up this introduction every time you want to switch the website, you can also modify the URL query params directly. They look something like this <code>url=google.com&width=800&height=600&links=on</code> and change the same configuration that is shown on this page.
             <h4>Usage as a proxy site</h4>
             <p>Do what you have to do, but your IP will be forwarded to the remote server with every browse request. You should probably be using a properly configured proxy server, not this text browser.
             <h2>Contact</h2>
@@ -90,11 +97,5 @@
             <p><small>Made Nov 04th 2019</small>
             <br><br>
         </main>
-    <script>
-        function detect_dimensions() {
-            document.getElementById('width').value = window.innerWidth;
-            document.getElementById('height').value = window.innerHeight;
-        }
-    </script>
     </body>
 </html>
