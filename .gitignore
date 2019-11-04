@@ -1,4 +1,4 @@
 node_modules
-*.png
+test.png
 server.js
 cache
