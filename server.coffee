@@ -6,6 +6,9 @@ Cacheman = require 'cacheman'
 server_url = process.env.SERVER_URL
 if not server_url
 	process.exit(3)
+port = process.env.PORT
+if not port
+	process.exit(4)
 
 error = (e, res) =>
 	console.error e
@@ -66,4 +69,4 @@ process.on 'unhandledRejection', (reason, p) =>
 	error "UHPRJ @ #{p}, #{reason}"
 
 do =>
-    app.listen 8080, => console.log 'running'
+    app.listen port, => console.log 'running'
