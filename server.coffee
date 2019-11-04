@@ -14,6 +14,7 @@ error = (e, res) =>
 		res.status(500).send "Request failed: " + e
 
 app = express()
+app.set 'trust proxy', true
 
 app.use compression( filter: (req, res) =>
 	if req.headers['x-no-compression']
@@ -49,7 +50,7 @@ app.get '/', (req, res, next) =>
 		return res.send cached
 
 	try
-		html = await snap server_url, url, width, height, scroll_top, links
+		html = await snap server_url, url, width, height, scroll_top, links, req.ip
 		await cache.set cache_key, html
 		res.send html
 	catch e

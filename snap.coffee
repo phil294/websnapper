@@ -4,7 +4,7 @@ puppeteer = require 'puppeteer'
 # and closed afterwards.
 browser = null
 
-module.exports = (server_url, url, width, height, scroll_top, links) =>
+module.exports = (server_url, url, width, height, scroll_top, links, forwarded_for) =>
 	if not browser
 		browser = await puppeteer.launch()
 	page = await browser.newPage()
@@ -12,6 +12,10 @@ module.exports = (server_url, url, width, height, scroll_top, links) =>
 	page.setJavaScriptEnabled false
 	
 	page.setViewport { width, height }
+
+	page.setExtraHTTPHeaders
+		'Via': 'HTTP 1.1'
+		'X-Forwarded-For': forwarded_for
 	
 	page.setRequestInterception true
 	page.on 'request', (req) =>
