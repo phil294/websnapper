@@ -1,3 +1,4 @@
 node_modules
 *.png
 server.js
+cache
