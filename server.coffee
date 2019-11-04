@@ -56,6 +56,9 @@ app.get '/', (req, res, next) =>
 	catch e
 		error e, res
 
+app.get '/favicon.ico', (req, res) =>
+	res.status(404).end()
+
 app.use (err, req, res, next) =>
     error err, res
 
