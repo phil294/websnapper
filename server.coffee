@@ -3,12 +3,12 @@ compression = require 'compression'
 snap = require './snap'
 Cacheman = require 'cacheman'
 
-server_url = process.env.SERVER_URL
-if not server_url
-	process.exit(3)
+###### optional env vars ######
 port = process.env.PORT
 if not port
-	process.exit(4)
+	port = 8080
+executable_path = process.env.CHROMIUM_EXECUTABLE_PATH
+###############################
 
 error = (e, res) =>
 	console.error e
@@ -25,7 +25,7 @@ app.use compression( filter: (req, res) =>
 	compression.filter req, res
 )
 
-app.use '/howto', express.static('howto')
+app.use '/howto', express.static('howto.html')
 
 cache = new Cacheman
 	ttl: 60*30
@@ -36,13 +36,13 @@ cache = new Cacheman
 app.get '/', (req, res, next) =>
 	{ url, width, height, scroll_top, links } = req.query
 	# some q&d params parsing #
-	if not url then return res.status(422).send "query param url missing. see #{server_url}/howto"
+	if not url then return res.status(422).send "query param url missing. see /howto"
 	if not url.match /^http/
 		url = "http://#{url}"
 	width = Number width
-	if Number.isNaN(width) then return res.status(422).send "query param width missing. see #{server_url}/howto"
+	if Number.isNaN(width) then return res.status(422).send "query param width missing. see /howto"
 	height = Number height
-	if Number.isNaN(height) then return res.status(422).send "query param height missing. see #{server_url}/howto"
+	if Number.isNaN(height) then return res.status(422).send "query param height missing. see /howto"
 	scroll_top = Number scroll_top
 	if Number.isNaN(scroll_top) then scroll_top = 0
 	links = links == "on" or links == true or links == "true" or links == 1 or links == "1"
@@ -53,7 +53,7 @@ app.get '/', (req, res, next) =>
 		return res.send cached
 
 	try
-		html = await snap server_url, url, width, height, scroll_top, links, req.ip
+		html = await snap executable_path, url, width, height, scroll_top, links, req.ip
 		await cache.set cache_key, html
 		res.send html
 	catch e

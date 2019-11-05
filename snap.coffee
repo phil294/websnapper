@@ -4,9 +4,14 @@ puppeteer = require 'puppeteer'
 # and closed afterwards.
 browser = null
 
-module.exports = (server_url, url, width, height, scroll_top, links, forwarded_for) =>
+module.exports = (executable_path = undefined, url, width, height, scroll_top, links, forwarded_for) =>
 	if not browser
-		browser = await puppeteer.launch()
+		browser = await puppeteer.launch
+			executablePath: executable_path
+			args: [
+				'--disable-dev-shm-usage'
+			]
+
 	page = await browser.newPage()
 	
 	page.setJavaScriptEnabled false
@@ -43,7 +48,7 @@ module.exports = (server_url, url, width, height, scroll_top, links, forwarded_f
 	await page.evaluate => debugger
 	
 	### Get all visible txt, a and img elements converted as absolutely positioned divs ###
-	absolute_els = await page.evaluate (links, server_url) =>
+	absolute_els = await page.evaluate (links) =>
 		els = []
 		escapeHtml = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;")
 		in_viewport = (rect) =>
@@ -126,9 +131,9 @@ module.exports = (server_url, url, width, height, scroll_top, links, forwarded_f
 				content = escapeHtml node.innerText.trim()
 				if content
 					style = get_style node.getBoundingClientRect()
-					els.push "<a style='#{style}' href='#{server_url}?url=#{encodeURIComponent node.href}&width=#{window.innerWidth}&height=#{window.innerHeight}&links=true'>#{content}</a>"
+					els.push "<a style='#{style}' href='?url=#{encodeURIComponent node.href}&width=#{window.innerWidth}&height=#{window.innerHeight}&links=true'>#{content}</a>"
 		els
-	, links, server_url
+	, links
 
 	title = await page.title()
 	title = "[websnapper] #{title}"
@@ -175,9 +180,9 @@ module.exports = (server_url, url, width, height, scroll_top, links, forwarded_f
 		</style>
 	""".replace(/[\n\t]/g,'') + """
 	\n<main>
-	<div class="i"><a href="#{server_url}?url=#{encodeURIComponent url}&width=#{width}&height=#{height}&scroll_top=#{scroll_top-height+100}&links=#{links}"><button>⇡</button></a><br><br><br><a href="#{server_url}/howto">?</a></div>
+	<div class="i"><a href="?url=#{encodeURIComponent url}&width=#{width}&height=#{height}&scroll_top=#{scroll_top-height+100}&links=#{links}"><button>⇡</button></a><br><br><br><a href="/howto">?</a></div>
 	#{absolute_els.join("")}
-	<a class="u" href="#{server_url}?url=#{encodeURIComponent url}&width=#{width}&height=#{height}&scroll_top=#{scroll_top-100+height}&links=#{links}"><button>⇣</button></a>
+	<a class="u" href="?url=#{encodeURIComponent url}&width=#{width}&height=#{height}&scroll_top=#{scroll_top-100+height}&links=#{links}"><button>⇣</button></a>
 	</main>
 	"""
 
