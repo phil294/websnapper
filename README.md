@@ -27,8 +27,6 @@ To run this software yourself, here is what you need to do, for example on a VM,
 - Make the package manager install the dependencies: `yarn`. This will also download a specific chromium browser module into your node_modules folder
 - Run the server e.g. with `PORT=7001 yarn run start`
 
-I will add a Docker image and build file later today and put it on here.
-
 #### Enable Javascript
 
 For JS to work, remove [this line](https://github.com/phil294/websnapper/blob/67c64d8e395cb3172be5e7896a8feb02c6b32d64/snap.coffee#L17) in your local version.
