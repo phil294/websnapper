@@ -8,6 +8,8 @@ Example of what this software does, a 800x600 comparison of a scrolled down sect
 ![websnapper vs normal website](example.png)
 in this case, 1.1 KB vs. 36 KB
 
+[Reddit discussion thread](https://www.reddit.com/r/opensource/comments/dry96f) for some more details
+
 ### ... or run the server locally
 
 #### Docker image
