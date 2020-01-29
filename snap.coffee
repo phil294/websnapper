@@ -39,7 +39,7 @@ module.exports = (executable_path = undefined, url, width, height, scroll_top, l
 	#await page.screenshot({path: 'test.png'});
 
 	# reenabling JS (when disabled) is necessary here (bug?) because
-	# the below node filtering cannot be run with javascript enabled, failing with
+	# the below node filtering cannot be run with javascript disabled, failing with
 	# Error: Evaluation failed: Error:
 	# 	Failed to execute 'acceptNode' on 'NodeFilter':
 	# 	The provided callback is no longer runnable.
